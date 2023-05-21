@@ -5,9 +5,26 @@ import Image from "next/image";
 import { LinkIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import { Button } from "../components/Button";
+import { useSession } from "next-auth/react";
+import useVotes from "../lib/useVotes";
+import { useEffect, useState } from "react";
+import { votes } from "@prisma/client";
 
 const Home: NextPage = () => {
 	const router = useRouter();
+	// const { data: session } = useSession();
+	// const { data: dataVotesApi, error, isLoading } = useVotes();
+	// // console.log("dataVotesApi", dataVotesApi);
+
+	// const [votes, setVotes] = useState<votes[]>();
+
+	// useEffect(() => {
+	// 	if (dataVotesApi) {
+	// 		setVotes(dataVotesApi);
+	// 	}
+	// }, [dataVotesApi]);
+	// console.log(votes);
+
 	return (
 		<div className="container mx-auto">
 			<Head>
@@ -19,9 +36,9 @@ const Home: NextPage = () => {
 			<Menu />
 
 			{/* Header */}
-			<div className="flex flex-col place-items-center py-44 space-y-3">
+			<div className="flex flex-col space-y-3 place-items-center py-44">
 				<h1 className="text-5xl font-bold">Ayo Mulai Voting!</h1>
-				<h2 className="text-lg bg-zinc-100 px-3 py-1">
+				<h2 className="px-3 py-1 text-lg bg-zinc-100">
 					Web Voting No. 1 Indonesia
 				</h2>
 				<Image
@@ -47,7 +64,7 @@ const Home: NextPage = () => {
 			{/* Table */}
 			<div>
 				<span className="py-5 text-lg font-bold">Vote yang saya buat</span>
-				<table className="table-auto w-full border border-zinc-100  ">
+				<table className="w-full border table-auto border-zinc-100 ">
 					<thead>
 						<tr className="border-b border-zinc-100">
 							<th className="p-5 text-left">No</th>

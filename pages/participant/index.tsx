@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Form from "../../components/Form";
 import { Button } from "../../components/Button";
 import { useRouter } from "next/router";
+import RestrictedPage from "../../components/page/RestrictedPage";
+import { useSession } from "next-auth/react";
 
 export default function Participant() {
 	const [code, setCodde] = useState("");
@@ -11,8 +13,13 @@ export default function Participant() {
 	const handleSubmmit = () => {
 		router.push("/participant/kode-voting");
 	};
+
+	const { data: session } = useSession();
+	if (!session) {
+		return <RestrictedPage />;
+	}
 	return (
-		<div className="flex flex-col w-full items-center justify-center h-screen space-y-5 container mx-auto">
+		<div className="container flex flex-col items-center justify-center w-full h-screen mx-auto space-y-5">
 			<Head>
 				<title>Ikut Partisipasi</title>
 			</Head>

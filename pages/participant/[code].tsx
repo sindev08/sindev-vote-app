@@ -17,12 +17,12 @@ export default function DetailParticipant() {
 			</Head>
 			<Menu />
 			<div>
-				<h1 className="text-4xl text-center mt-10">Judul Voting</h1>
+				<h1 className="mt-10 text-4xl text-center">Judul Voting</h1>
 				{/* Timer */}
 				<Countdown className="mt-10" />
 				{/* Timer */}
 				{/* Kandidat */}
-				<div className=" mt-10 space-y-3 mx-auto w-2/3">
+				<div className="w-2/3 mx-auto mt-10 space-y-3 ">
 					<CandidateItem />
 					<CandidateItem />
 					<CandidateItem />
@@ -30,7 +30,7 @@ export default function DetailParticipant() {
 				</div>
 				{/* Kandidat */}
 				{/* Submit */}
-				<div className="text-center mt-10">
+				<div className="mt-10 text-center">
 					<Button
 						text="Kirim Vote Saya"
 						onClick={() =>

@@ -6,6 +6,8 @@ interface Props {
 	type?: "primary" | "secondary";
 	className?: string;
 	onClick?: () => void;
+	isLoading?: boolean;
+
 	// url?: string | any;
 }
 
@@ -18,8 +20,9 @@ export const Button = (props: Props) => {
 					: "border-2 border-black bg-black hover:bg-zinc-800 text-white"
 			}  px-3 py-2 ${props.className}`}
 			onClick={props.onClick}
+			disabled={props.isLoading}
 		>
-			{props.text}
+			{props.isLoading ? "Loading..." : props.text}
 		</button>
 	);
 };
