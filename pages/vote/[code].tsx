@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "../../components/Menu";
 import Image from "next/image";
 import Form from "../../components/Form";
@@ -13,9 +13,10 @@ import { useSession } from "next-auth/react";
 import RestrictedPage from "../../components/page/RestrictedPage";
 import { showAlert } from "../../components/Alert";
 import { useRouter } from "next/router";
+import useVote from "../../lib/useVote";
 registerLocale("id", id);
 
-export default function CreateVote() {
+export default function DetailOrEditVote() {
 	const { data: session } = useSession();
 
 	const [startDateTime, setStartDateTime] = useState(new Date());
@@ -24,6 +25,21 @@ export default function CreateVote() {
 	const [title, setTitle] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
+
+	const { code } = router.query;
+
+	const { data: dataVoteApi, error } = useVote(code as string);
+
+	useEffect(() => {
+		if (dataVoteApi && dataVoteApi?.data) {
+			const d = dataVoteApi?.data;
+			setTitle(d.title);
+			setStartDateTime(new Date(d.startDateTime));
+			setEndDateTime(new Date(d.endDateTime));
+			setCandidates(d.candidates);
+		}
+	}, [dataVoteApi]);
+
 	const submitCandidate = (candidate: Candidate) => {
 		setCandidates(
 			candidates.map((c) => (c.key === candidate.key ? candidate : c))
@@ -50,7 +66,7 @@ export default function CreateVote() {
 		setCandidates(newCandidates);
 	};
 
-	const createVote = (e: any) => {
+	const updateVote = (e: any) => {
 		e.preventDefault();
 		//Validasi
 		if (title == "") {
@@ -77,8 +93,8 @@ export default function CreateVote() {
 		}
 
 		setLoading(true);
-		fetch("/api/vote", {
-			method: "POST",
+		fetch(("/api/vote/" + code) as string, {
+			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -87,17 +103,16 @@ export default function CreateVote() {
 				startDateTime,
 				endDateTime,
 				candidates,
-				publisher: session?.user?.email,
 			}),
 		})
 			.then((data) => {
-				showAlert({ title: "Yeayy", message: "Voting berhasil dibuat" });
+				showAlert({ title: "Yeayy", message: "Voting berhasil diubah" });
 				router.push("/");
 			})
 			.catch(() => {
 				showAlert({
 					title: "Yeayy",
-					message: "Voting gagal dibuat",
+					message: "Voting gagal diubah",
 				});
 			})
 			.finally(() => {
@@ -127,7 +142,7 @@ export default function CreateVote() {
 			<h2 className="mt-3 text-zinc">
 				Silahkan masukkan data yang dibutuhkan sebelum membuat vote online
 			</h2>
-			<form className="flex flex-col" onSubmit={createVote}>
+			<form className="flex flex-col" onSubmit={updateVote}>
 				{/* Detail Vote */}
 				<div className="space-y-5">
 					<h3 className="mt-10 text-xl font-medium ">Detail Voting</h3>

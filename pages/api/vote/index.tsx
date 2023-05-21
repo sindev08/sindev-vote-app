@@ -3,14 +3,12 @@ import { getSession } from "next-auth/react";
 import { prisma } from "../../../lib/prisma";
 import { code } from "../../../lib/code";
 import { votes } from "@prisma/client";
-import { getServerSession } from "next-auth/next";
 
 export default async function handle(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
 	const session = await getSession({ req });
-	// const session = await getServerSession(req);
 	if (!session) {
 		return res
 			.status(404)
@@ -32,18 +30,19 @@ export default async function handle(
 		return res.json(result);
 	}
 
-	// // Get All by Users
-	// if (req.method === "GET") {
-	// 	const result = await prisma.votes.findMany({
-	// 		where: {
-	// 			AND: [{ deleteAt: null }, { publisher: session?.user?.email! }],
-	// 		},
-	// 	});
-	// 	const response: Res<votes[]> = {
-	// 		status: 200,
-	// 		data: result,
-	// 	};
-	// }
+	// Get All by Users
+	if (req.method === "GET") {
+		const result = await prisma.votes.findMany({
+			where: {
+				AND: [{ deleteAt: null }, { publisher: session?.user?.email! }],
+			},
+		});
+		const response: Res<votes[]> = {
+			status: 200,
+			data: result,
+		};
+		return res.json(response);
+	}
 
 	return res.status(200).json({ data: "Hello World" });
 }

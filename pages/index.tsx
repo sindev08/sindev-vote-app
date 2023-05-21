@@ -9,21 +9,48 @@ import { useSession } from "next-auth/react";
 import useVotes from "../lib/useVotes";
 import { useEffect, useState } from "react";
 import { votes } from "@prisma/client";
+import moment from "moment";
+import { showAlert } from "../components/Alert";
 
 const Home: NextPage = () => {
 	const router = useRouter();
-	// const { data: session } = useSession();
-	// const { data: dataVotesApi, error, isLoading } = useVotes();
-	// // console.log("dataVotesApi", dataVotesApi);
+	const { data: session } = useSession();
+	const { data: dataVotesApi, error, isLoading } = useVotes();
+	// console.log("dataVotesApi", dataVotesApi);
 
-	// const [votes, setVotes] = useState<votes[]>();
+	const [votes, setVotes] = useState<votes[]>();
 
-	// useEffect(() => {
-	// 	if (dataVotesApi) {
-	// 		setVotes(dataVotesApi);
-	// 	}
-	// }, [dataVotesApi]);
-	// console.log(votes);
+	const handleDelete = (code: string) => {
+		showAlert({
+			title: "Anda Yakin?",
+			message: "Ingin menghapus data ini?",
+			onPositiveClick() {
+				fetch("/api/vote/" + code, {
+					method: "DELETE",
+				})
+					.then(() => {
+						showAlert({
+							title: "Berhasil",
+							message: "Data Berhasil Dihapus",
+						});
+						setVotes(votes?.filter((vote) => vote.code !== code));
+					})
+					.catch(() => {
+						showAlert({
+							title: "Gagal",
+							message: "Data Gagal Dihapus",
+						});
+					});
+			},
+		});
+	};
+
+	useEffect(() => {
+		if (dataVotesApi) {
+			setVotes(dataVotesApi.data);
+		}
+	}, [dataVotesApi]);
+	console.log(votes);
 
 	return (
 		<div className="container mx-auto">
@@ -62,42 +89,65 @@ const Home: NextPage = () => {
 			</div>
 
 			{/* Table */}
-			<div>
-				<span className="py-5 text-lg font-bold">Vote yang saya buat</span>
-				<table className="w-full border table-auto border-zinc-100 ">
-					<thead>
-						<tr className="border-b border-zinc-100">
-							<th className="p-5 text-left">No</th>
-							<th className="p-5 text-left">Judul</th>
-							<th className="p-5 text-left">Kandidat</th>
-							<th className="p-5 text-left">Kode</th>
-							<th className="p-5 text-left">Mulai</th>
-							<th className="p-5 text-left">Selesai</th>
-							<th className="p-5 text-left"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td className="p-5 text-left">1</td>
-							<td className="p-5 text-left">Judul Voting</td>
-							<td className="p-5 text-left">Budi vs Anto</td>
-							<td className="p-5 text-left">jaodi</td>
-							<td className="p-5 text-left">20 Oct 2022 11:00 AM</td>
-							<td className="p-5 text-left">20 Oct 2022 11:00 AM</td>
-							<td className="p-5 text-left">
-								<div className="">
-									<a href="">
-										<LinkIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
-									</a>
-									<a href="">
-										<TrashIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
-									</a>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			{session && (
+				<div className="mb-10">
+					<span className="py-5 text-lg font-bold">Vote yang saya buat</span>
+					<table className="w-full border table-auto border-zinc-100 ">
+						<thead>
+							<tr className="border-b border-zinc-100">
+								<th className="p-5 text-left">No</th>
+								<th className="p-5 text-left">Judul</th>
+								<th className="p-5 text-left">Kandidat</th>
+								<th className="p-5 text-left">Kode</th>
+								<th className="p-5 text-left">Mulai</th>
+								<th className="p-5 text-left">Selesai</th>
+								<th className="p-5 text-left"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{votes && votes.length > 0
+								? votes?.map((vote: votes, i: number) => (
+										<tr key={i}>
+											<td className="p-5 text-left">{i + 1}</td>
+											<td className="p-5 text-left underline">
+												<a href={`/vote/${vote.code}`}>{vote.title}</a>
+											</td>
+											<td className="p-5 text-left">
+												{vote.candidates.map((c: Candidate, index: number) => (
+													<span key={index}>
+														{c.name +
+															(index < vote.candidates.length - 1
+																? " vs "
+																: "")}
+													</span>
+												))}
+											</td>
+											<td className="p-5 font-bold text-left">{vote.code}</td>
+											<td className="p-5 text-left">
+												{moment(vote.startDateTime).format(
+													"DD MMM YYYY hh:mm a"
+												)}
+											</td>
+											<td className="p-5 text-left">
+												{moment(vote.endDateTime).format("DD MMM YYYY hh:mm a")}
+											</td>
+											<td className="p-5 text-left">
+												<div className="">
+													<a href={`/participant/${vote.code}`}>
+														<LinkIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+													</a>
+													<button onClick={() => handleDelete(vote.code)}>
+														<TrashIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+													</button>
+												</div>
+											</td>
+										</tr>
+								  ))
+								: "Belum ada votes yang dibuat"}
+						</tbody>
+					</table>
+				</div>
+			)}
 		</div>
 	);
 };
