@@ -1,30 +1,46 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
-export default function CandidateItem() {
+interface Props {
+	name: string;
+	title?: string;
+	index: number;
+	percentage?: number;
+	onClick?: () => void;
+	isSelected: boolean;
+}
+
+export default function CandidateItem(props: Props) {
 	return (
-		<div className=" flex flex-row border border-zinc-100 p-5 rounded-md space-x-3">
-			<div className=" w-12 h-12 font-bold text-lg items-center flex justify-center bg-zinc-100 text-center">
-				1
+		<div className="flex flex-row p-5 space-x-3 border rounded-md border-zinc-100">
+			<div className="flex items-center justify-center w-12 h-12 text-lg font-bold text-center bg-zinc-100">
+				{props.index + 1}
 			</div>
-			<div className=" w-full">
-				<h3 className="text-lg font-bold">Nama Kandidat</h3>
-				<p>Kandidat 1</p>
+			<div className="w-full ">
+				<h3 className="text-lg font-bold">{props.name}</h3>
+				<p>{props.title}</p>
 				<div className="flex flex-row items-center space-x-2">
 					{/* Bar */}
-					<div className="w-full h-1 bg-zinc-100 rounded-full">
+					<div className="w-full h-1 rounded-full bg-zinc-100">
 						<div
 							className="h-1 bg-black rounded-full"
-							style={{ width: "40%" }}
+							style={{ width: `${props.percentage}%` }}
 						></div>
 					</div>
 					{/* Bar */}
 					{/* Indikator */}
-					<p className=" text-sm font-bold">40%</p>
+					<p className="text-sm font-bold ">{props.percentage}%</p>
 					{/* Indikator */}
 				</div>
 			</div>
-			<div className="flex w-20 h-20 items-center justify-center cursor-pointer bg-zinc-100 rounded-md">
+			<div
+				onClick={props.onClick}
+				className={`flex items-center justify-center w-20 h-20 rounded-md cursor-pointer ${
+					props.isSelected
+						? "bg-green-500 hover:bg-green-600"
+						: "bg-zinc-100 hover:bg-zinc-200"
+				}`}
+			>
 				<CheckIcon className="w-7 h-7" />
 			</div>
 		</div>

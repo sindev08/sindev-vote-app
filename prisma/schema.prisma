@@ -27,3 +27,11 @@ model votes{
   createdAt DateTime @default(now()) @map("createdAt") @db.Date
   deleteAt String?
 }
+
+model participant{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String
+  createdAt DateTime @default(now()) @map("createdAt") @db.Date
+  candidate String
+  code String
+}

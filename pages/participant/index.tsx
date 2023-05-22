@@ -6,12 +6,33 @@ import { Button } from "../../components/Button";
 import { useRouter } from "next/router";
 import RestrictedPage from "../../components/page/RestrictedPage";
 import { useSession } from "next-auth/react";
+import { showAlert } from "../../components/Alert";
 
 export default function Participant() {
 	const [code, setCodde] = useState("");
 	const router = useRouter();
-	const handleSubmmit = () => {
-		router.push("/participant/kode-voting");
+	const handleSubmmit = async () => {
+		if (code === "") {
+			showAlert({
+				title: "Hmmh..",
+				message: "Tolong masukkan kode yang benar",
+			});
+		}
+		await fetch("/api/vote/" + code, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.message && data?.message === "NOT_FOUND") {
+					showAlert({
+						title: "Hmmh...",
+						message: "Kode yang anda masukkan salah",
+					});
+					return;
+				}
+				router.push("/participant/kode-voting");
+				return;
+			});
 	};
 
 	const { data: session } = useSession();
