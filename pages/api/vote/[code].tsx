@@ -15,9 +15,9 @@ export default async function handle(
 
 	const { code } = req.query;
 
-	// Get Detail by ciode
+	// Get Detail by code
 	if (req.method === "GET") {
-		const result = await prisma?.votes.findFirst({
+		const vote = await prisma?.votes.findFirst({
 			select: {
 				id: true,
 				publisher: true,
@@ -34,12 +34,57 @@ export default async function handle(
 				deleteAt: null,
 			},
 		});
-		if (!result) {
+		if (!vote) {
 			return res.status(404).json({ message: "NOT_FOUND" });
 		}
-		const response: Res<votes> = {
+
+		// Get Participant of the vote
+		const participants = await prisma?.participant.findMany({
+			select: {
+				candidate: true,
+				email: true,
+				createdAt: true,
+			},
+			where: {
+				code: code as string,
+			},
+		});
+
+		// Count Vote for each candidate
+		var candidates: Candidate[] = [];
+		if (participants) {
+			candidates = vote?.candidates.map((candidate) => {
+				const votes =
+					participants.filter(
+						(participant) => participant.candidate === candidate.name
+					).length || 0;
+				return {
+					...candidate,
+					votes,
+				};
+			}) as Candidate[];
+		}
+
+		const clientVote: Vote = {
+			id: vote.id,
+			publisher: vote.publisher,
+			title: vote.title,
+			code: vote.code,
+			startDateTime: String(vote.startDateTime),
+			endDateTime: String(vote.endDateTime),
+			candidates: vote.candidates,
+			createdAt: String(vote.createdAt),
+			totalVotes: candidates
+				? candidates?.reduce(
+						(acc, candidate) => acc + (candidate.votes ? candidate.votes : 0),
+						0
+				  )
+				: 0,
+		};
+
+		const response: Res<Vote> = {
 			status: 200,
-			data: result,
+			data: clientVote,
 		};
 		return res.json(response);
 	}

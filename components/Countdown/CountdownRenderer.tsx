@@ -10,11 +10,15 @@ interface Props {
 
 export default function CountdownRenderer(props: Props) {
 	return (
-		<div className="flex flex-row mx-auto justify-center">
-			<CountdownItem label="Hari" value={props.days} />
-			<CountdownItem label="Jam" value={props.hours} />
-			<CountdownItem label="Menit" value={props.minutes} />
-			<CountdownItem label="Detik" value={props.seconds} />
+		<div className="flex flex-row justify-center mx-auto">
+			{props.days > 0 && <CountdownItem label="Hari" value={props.days} />}
+			{props.hours > 0 && <CountdownItem label="Jam" value={props.hours} />}
+			{props.minutes > 0 && (
+				<CountdownItem label="Menit" value={props.minutes} />
+			)}
+			{props.seconds > 0 && (
+				<CountdownItem label="Detik" value={props.seconds} />
+			)}
 		</div>
 	);
 }

@@ -2,12 +2,14 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Menu } from "../../components/Menu";
-import CandidateItem from "./CandidateItem";
+import CandidateItem from "../../components/CandidateItem";
 import { Button } from "../../components/Button";
 import Countdown from "../../components/Countdown/Countdown";
 import { showAlert } from "../../components/Alert";
 import useVote from "../../lib/useVote";
 import moment from "moment";
+import useParticipant from "../../lib/participant";
+import { useSession } from "next-auth/react";
 
 export const STATE_NOT_STARTED = "STATE_NOT_STARTED",
 	STATE_STARTED = "STATE_STARTED",
@@ -16,9 +18,11 @@ export const STATE_NOT_STARTED = "STATE_NOT_STARTED",
 
 export default function DetailParticipant() {
 	const router = useRouter();
+	const { data: session } = useSession();
 	const { code } = router.query;
 	const { data: dataVoteApi, mutate: mutateVoteApi } = useVote(code as string);
-
+	const { data: dataParticipantApi, mutate: mutateParticipantApi } =
+		useParticipant(code as string);
 	const [selectedCandidate, setSelectedCandidate] =
 		useState<Candidate | null>();
 	const [currentState, setCurrentState] = useState(STATE_LOADING);
@@ -44,6 +48,7 @@ export default function DetailParticipant() {
 					);
 					if (res.status === 200) {
 						mutateVoteApi();
+						mutateParticipantApi();
 						showAlert({
 							title: "Vote terkirim",
 							message: "Terimakasih telah berpartisipasi",
@@ -58,6 +63,17 @@ export default function DetailParticipant() {
 			});
 		}
 	};
+
+	useEffect(() => {
+		if (dataParticipantApi && dataVoteApi) {
+			const candidate = dataVoteApi?.data?.candidates?.find(
+				(c) => c.name === dataParticipantApi?.data?.candidate
+			);
+			if (candidate) {
+				setSelectedCandidate(candidate);
+			}
+		}
+	}, [dataParticipantApi, dataVoteApi]);
 
 	useEffect(() => {
 		if (dataVoteApi && dataVoteApi?.data) {
@@ -105,14 +121,20 @@ export default function DetailParticipant() {
 						(candidate: Candidate, i: number) => (
 							<CandidateItem
 								onClick={() => {
-									currentState === STATE_STARTED &&
+									!dataParticipantApi?.data &&
+										currentState === STATE_STARTED &&
 										setSelectedCandidate(candidate);
 								}}
 								isSelected={selectedCandidate?.name === candidate.name}
 								name={candidate.name}
 								index={i}
 								title={"Kandidate" + candidate.key}
-								percentage={candidate.votes ? (candidate.votes / 1) * 100 : 0}
+								percentage={
+									candidate.votes
+										? (candidate.votes / (dataVoteApi?.data?.totalVotes || 0)) *
+										  100
+										: 0
+								}
 								key={i}
 							/>
 						)
@@ -121,20 +143,34 @@ export default function DetailParticipant() {
 				{/* Kandidat */}
 				{/* Submit */}
 				<div className="mt-10 text-center">
-					<Button
-						text="Kirim Vote Saya"
-						onClick={
-							() => {
-								submitVote();
-							}
-							// showAlert({
-							// 	title: "Yeayy",
-							// 	message: "Kamu Berhasil",
-							// 	positiveBtnText: "Iya",
-							// 	onPositiveClick() {},
-							// })
-						}
-					/>
+					{session?.user?.email != dataVoteApi?.data?.publisher &&
+						!dataParticipantApi?.data &&
+						currentState === STATE_STARTED && (
+							<Button
+								text="Kirim Vote Saya"
+								onClick={
+									() => {
+										submitVote();
+									}
+									// showAlert({
+									// 	title: "Yeayy",
+									// 	message: "Kamu Berhasil",
+									// 	positiveBtnText: "Iya",
+									// 	onPositiveClick() {},
+									// })
+								}
+							/>
+						)}
+					{dataParticipantApi?.data && (
+						<span className="px-3 py-2 bg-zinc-100">
+							Kamu sudah memilih dan tidka boleh ganti pilihan
+						</span>
+					)}
+					{session?.user?.email === dataVoteApi?.data?.publisher && (
+						<span className="px-3 py-2 bg-zinc-100">
+							Pembuat vote tidka dapat mengikuti voting
+						</span>
+					)}
 				</div>
 			</div>
 		</div>
