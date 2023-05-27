@@ -1,4 +1,5 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -12,9 +13,12 @@ interface Props {
 
 export default function CandidateItem(props: Props) {
 	return (
-		<div className="flex flex-row p-5 space-x-3 border rounded-md border-zinc-100">
+		<div className="flex flex-row items-center p-5 space-x-3 border rounded-md border-zinc-100">
 			<div className="flex items-center justify-center w-12 h-12 text-lg font-bold text-center bg-zinc-100">
 				{props.index + 1}
+			</div>
+			<div className="relative flex items-center self-center justify-center w-24 overflow-hidden rounded bg-zinc-100 aspect-square">
+				<Image src={"/assets/images/profile.png"} alt="profile" fill />
 			</div>
 			<div className="w-full ">
 				<h3 className="text-lg font-bold">{props.name}</h3>
