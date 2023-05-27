@@ -1,7 +1,14 @@
-import { LinkIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+	ChevronDoubleLeftIcon,
+	ChevronDoubleRightIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	LinkIcon,
+	TrashIcon,
+} from "@heroicons/react/24/solid";
 import moment from "moment";
 import React, { useState } from "react";
-import { useGlobalFilter, useTable } from "react-table";
+import { useGlobalFilter, usePagination, useTable } from "react-table";
 import { showAlert } from "../Alert";
 import { votes } from "@prisma/client";
 import GlobalFilter from "./GlobalFilter";
@@ -22,12 +29,23 @@ export default function Table({ columns, tableData }: Props) {
 		state,
 		preGlobalFilteredRows,
 		setGlobalFilter,
+		page,
+		// The rest of these things are super handy, too ;)
+		canPreviousPage,
+		canNextPage,
+		pageOptions,
+		pageCount,
+		gotoPage,
+		nextPage,
+		previousPage,
+		setPageSize,
 	} = useTable(
 		{
 			columns,
 			data: tableData,
 		},
-		useGlobalFilter
+		useGlobalFilter,
+		usePagination
 	);
 	const [deleteVote, setDeleteVotes] = useState<votes[]>();
 
@@ -86,7 +104,7 @@ export default function Table({ columns, tableData }: Props) {
 					))}
 				</thead>
 				<tbody {...getTableBodyProps()}>
-					{rows?.map((row: any, i: number) => {
+					{page?.map((row: any, i: number) => {
 						prepareRow(row);
 						return (
 							<tr key={i} {...row.getRowProps()}>
@@ -128,23 +146,67 @@ export default function Table({ columns, tableData }: Props) {
 										</button>
 									</div>
 								</td>
-
-								{/* {row?.cells?.map((cell: any, index: number) => {
-								return (
-									<td
-										className="p-5 text-left"
-										key={i}
-										{...cell.getCellProps()}
-									>
-										{cell.render("Cell")}
-									</td>
-								);
-							})} */}
 							</tr>
 						);
 					})}
 				</tbody>
 			</table>
+			<div className="flex items-center justify-between w-full pb-16 mt-8">
+				<div className="flex items-center space-x-4">
+					<button
+						className="px-3 py-2 border-2 border-zinc-900"
+						onClick={() => gotoPage(0)}
+						disabled={!canPreviousPage}
+					>
+						<ChevronDoubleLeftIcon className="w-5 h-5" />
+					</button>
+					<button
+						className="px-3 py-2 border-2 bg-zinc-900 border-zinc-900"
+						onClick={() => previousPage()}
+						disabled={!canPreviousPage}
+					>
+						<ChevronLeftIcon className="w-5 h-5 text-white" />
+					</button>
+				</div>
+
+				<div className="flex items-center space-x-4">
+					<span>
+						Halaman{" "}
+						<strong>
+							{state.pageIndex + 1} of {pageOptions.length}
+						</strong>{" "}
+					</span>
+					<select
+						value={state.pageSize}
+						className=" focus:outline-none"
+						onChange={(e) => {
+							setPageSize(Number(e.target.value));
+						}}
+					>
+						{[5, 10, 20].map((pageSize) => (
+							<option key={pageSize} value={pageSize}>
+								Memperlihatkan {pageSize}
+							</option>
+						))}
+					</select>
+				</div>
+				<div className="flex items-center space-x-4">
+					<button
+						className="px-3 py-2 border-2 bg-zinc-900 border-zinc-900"
+						onClick={() => nextPage()}
+						disabled={!canNextPage}
+					>
+						<ChevronRightIcon className="w-5 h-5 text-white" />
+					</button>
+					<button
+						className="px-3 py-2 border-2 border-zinc-900"
+						onClick={() => gotoPage(pageCount - 1)}
+						disabled={!canNextPage}
+					>
+						<ChevronDoubleRightIcon className="w-5 h-5" />
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 }

@@ -75,8 +75,6 @@ const Home: NextPage = () => {
 		}
 	}, [dataVotesApi]);
 	const tableData = useMemo(() => votes, [votes]);
-	console.log("data", tableData);
-	console.log("votes", votes);
 
 	return (
 		<div className="container mx-auto">

@@ -38,7 +38,6 @@ export default function Login({ providers }: any) {
 	if (session) {
 		router.push("/");
 	}
-	console.log(providers);
 	return (
 		<div className="container flex flex-col items-center justify-center h-screen m-auto">
 			<Head>
