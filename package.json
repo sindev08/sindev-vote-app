@@ -1,37 +1,38 @@
 {
-  "name": "sindev-vote-app",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@heroicons/react": "^2.0.18",
-    "@prisma/client": "^4.14.1",
-    "moment": "^2.29.4",
-    "next": "13.4.2",
-    "next-auth": "4.19",
-    "prisma": "^4.14.1",
-    "react": "18.2.0",
-    "react-countdown": "^2.3.5",
-    "react-datepicker": "^4.11.0",
-    "react-dom": "18.2.0",
-    "swr": "^2.1.5",
-    "ts-node": "^10.9.1"
-  },
-  "devDependencies": {
-    "@types/node": "^20.2.1",
-    "@types/react": "18.2.6",
-    "@types/react-datepicker": "^4.11.2",
-    "@types/react-dom": "18.2.4",
-    "autoprefixer": "^10.4.14",
-    "eslint": "8.40.0",
-    "eslint-config-next": "13.4.2",
-    "postcss": "^8.4.23",
-    "tailwindcss": "^3.3.2",
-    "typescript": "^5.0.4"
-  }
+	"name": "sindev-vote-app",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "prisma generate && next build",
+		"start": "next start",
+		"lint": "next lint",
+		"postinstall": "prisma generate"
+	},
+	"dependencies": {
+		"@heroicons/react": "^2.0.18",
+		"@prisma/client": "^4.14.1",
+		"moment": "^2.29.4",
+		"next": "13.4.2",
+		"next-auth": "4.19",
+		"prisma": "^4.14.1",
+		"react": "18.2.0",
+		"react-countdown": "^2.3.5",
+		"react-datepicker": "^4.11.0",
+		"react-dom": "18.2.0",
+		"swr": "^2.1.5",
+		"ts-node": "^10.9.1"
+	},
+	"devDependencies": {
+		"@types/node": "^20.2.1",
+		"@types/react": "18.2.6",
+		"@types/react-datepicker": "^4.11.2",
+		"@types/react-dom": "18.2.4",
+		"autoprefixer": "^10.4.14",
+		"eslint": "8.40.0",
+		"eslint-config-next": "13.4.2",
+		"postcss": "^8.4.23",
+		"tailwindcss": "^3.3.2",
+		"typescript": "^5.0.4"
+	}
 }
