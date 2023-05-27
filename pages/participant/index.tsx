@@ -11,6 +11,10 @@ import { showAlert } from "../../components/Alert";
 export default function Participant() {
 	const [code, setCodde] = useState("");
 	const router = useRouter();
+	const { data: session } = useSession();
+	if (!session) {
+		return <RestrictedPage />;
+	}
 	const handleSubmmit = async () => {
 		if (code === "") {
 			showAlert({
@@ -30,15 +34,11 @@ export default function Participant() {
 					});
 					return;
 				}
-				router.push("/participant/kode-voting");
+				router.push("/participant/" + code);
 				return;
 			});
 	};
 
-	const { data: session } = useSession();
-	if (!session) {
-		return <RestrictedPage />;
-	}
 	return (
 		<div className="container flex flex-col items-center justify-center w-full h-screen mx-auto space-y-5">
 			<Head>

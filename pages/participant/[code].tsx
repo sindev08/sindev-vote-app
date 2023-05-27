@@ -163,12 +163,12 @@ export default function DetailParticipant() {
 						)}
 					{dataParticipantApi?.data && (
 						<span className="px-3 py-2 bg-zinc-100">
-							Kamu sudah memilih dan tidka boleh ganti pilihan
+							Kamu sudah memilih dan tidak boleh ganti pilihan
 						</span>
 					)}
 					{session?.user?.email === dataVoteApi?.data?.publisher && (
 						<span className="px-3 py-2 bg-zinc-100">
-							Pembuat vote tidka dapat mengikuti voting
+							Pembuat vote tidak dapat mengikuti voting
 						</span>
 					)}
 				</div>

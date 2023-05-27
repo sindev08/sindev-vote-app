@@ -34,7 +34,7 @@ export default async function handle(
 	if (req.method === "GET") {
 		const result = await prisma.votes.findMany({
 			where: {
-				AND: [{ deleteAt: null }, { publisher: session?.user?.email! }],
+				AND: [{ deleteAt: null }],
 			},
 		});
 		const response: Res<votes[]> = {

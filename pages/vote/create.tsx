@@ -17,13 +17,15 @@ registerLocale("id", id);
 
 export default function CreateVote() {
 	const { data: session } = useSession();
-
 	const [startDateTime, setStartDateTime] = useState(new Date());
 	const [endDateTime, setEndDateTime] = useState(new Date());
 	const [candidates, setCandidates] = useState<Candidate[]>([]);
 	const [title, setTitle] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
+	if (!session) {
+		return <RestrictedPage />;
+	}
 	const submitCandidate = (candidate: Candidate) => {
 		setCandidates(
 			candidates.map((c) => (c.key === candidate.key ? candidate : c))
@@ -105,9 +107,6 @@ export default function CreateVote() {
 			});
 	};
 
-	if (!session) {
-		return <RestrictedPage />;
-	}
 	return (
 		<div className="container mx-auto">
 			<Head>

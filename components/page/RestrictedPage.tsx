@@ -1,11 +1,23 @@
 import Head from "next/head";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../Button";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function RestrictedPage() {
-	return (
+	const [loading, setLoading] = useState(true);
+	const { data: session } = useSession();
+	if (session) {
+		setLoading(false);
+	}
+	return loading ? (
+		<div className="flex items-center justify-center w-full h-screen">
+			<Head>
+				<title>Loading...</title>
+			</Head>
+			<h1 className="text-4xl font-bold ">Loading...</h1>
+		</div>
+	) : (
 		<div className="flex flex-col items-center justify-center h-screen space-y-5 ">
 			<Head>
 				<title>Login dulu</title>

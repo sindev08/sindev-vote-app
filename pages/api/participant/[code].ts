@@ -16,7 +16,7 @@ export default async function handle(
 
 	const { code } = req.query;
 
-	// Aadd Participant
+	// Add Participant
 	if (req.method === "POST") {
 		const result = await prisma?.participant.create({
 			data: {

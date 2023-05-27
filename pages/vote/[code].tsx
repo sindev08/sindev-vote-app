@@ -25,13 +25,21 @@ export default function DetailOrEditVote() {
 	const [title, setTitle] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-
 	const { code } = router.query;
-
 	const { data: dataVoteApi, error } = useVote(code as string);
 
 	useEffect(() => {
-		if (dataVoteApi && dataVoteApi?.data) {
+		if (session?.user?.email !== dataVoteApi?.data?.publisher) {
+			showAlert({
+				title: "Tidak bisa diakses",
+				message: "Anda bukan sebagai publisher",
+				negativeBtnText: "Tutup",
+				positiveBtnText: "Kembali ke berand",
+				onPositiveClick() {
+					router.push("/");
+				},
+			});
+		} else if (dataVoteApi && dataVoteApi?.data) {
 			const d = dataVoteApi?.data;
 			setTitle(d.title);
 			setStartDateTime(new Date(d.startDateTime));
@@ -40,6 +48,17 @@ export default function DetailOrEditVote() {
 		}
 	}, [dataVoteApi]);
 
+	if (!session) {
+		return <RestrictedPage />;
+	}
+
+	// else if (session?.user?.email !== dataVoteApi?.data?.publisher) {
+	// 	showAlert({
+	// 		title: "Tidak bisa diakses",
+	// 		message: "Anda bukan sebagai publisher",
+	// 	});
+	// 	router.push("/");
+	// }
 	const submitCandidate = (candidate: Candidate) => {
 		setCandidates(
 			candidates.map((c) => (c.key === candidate.key ? candidate : c))
@@ -119,10 +138,6 @@ export default function DetailOrEditVote() {
 				setLoading(false);
 			});
 	};
-
-	if (!session) {
-		return <RestrictedPage />;
-	}
 	return (
 		<div className="container mx-auto">
 			<Head>
