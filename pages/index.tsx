@@ -2,15 +2,14 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { Menu } from "../components/Menu";
 import Image from "next/image";
-import { LinkIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import { Button } from "../components/Button";
 import { useSession } from "next-auth/react";
 import useVotes from "../lib/useVotes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { votes } from "@prisma/client";
-import moment from "moment";
 import { showAlert } from "../components/Alert";
+import Table from "../components/tables/Table";
 
 const Home: NextPage = () => {
 	const router = useRouter();
@@ -44,13 +43,40 @@ const Home: NextPage = () => {
 			},
 		});
 	};
+	const columns = useMemo(
+		() => [
+			{
+				Header: "Judul",
+				accessor: "title",
+			},
+			{
+				Header: "Kandidat",
+				accessor: "candidates",
+			},
+			{
+				Header: "Kode",
+				accessor: "code",
+			},
+			{
+				Header: "Mulai",
+				accessor: "startDateTime",
+			},
+			{
+				Header: "Selesai",
+				accessor: "endDateTime",
+			},
+		],
+		[]
+	);
 
 	useEffect(() => {
 		if (dataVotesApi) {
-			setVotes(dataVotesApi.data);
+			setVotes(dataVotesApi?.data);
 		}
 	}, [dataVotesApi]);
-	console.log(votes);
+	const tableData = useMemo(() => votes, [votes]);
+	console.log("data", tableData);
+	console.log("votes", votes);
 
 	return (
 		<div className="container mx-auto">
@@ -88,8 +114,12 @@ const Home: NextPage = () => {
 				</div>
 			</div>
 
+			{session && tableData && columns && (
+				<Table columns={columns} tableData={tableData} />
+			)}
+
 			{/* Table */}
-			{session && (
+			{/* {session && (
 				<div className="mb-10">
 					<span className="py-5 text-lg font-bold">Vote yang saya buat</span>
 					<table className="w-full border table-auto border-zinc-100 ">
@@ -147,7 +177,7 @@ const Home: NextPage = () => {
 						</tbody>
 					</table>
 				</div>
-			)}
+			)} */}
 		</div>
 	);
 };
