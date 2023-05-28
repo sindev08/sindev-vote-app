@@ -3,5 +3,6 @@ interface Candidate {
 	title: string;
 	key: number;
 	votes?: number;
-	imageUrl: string;
+	imageUrl?: string;
+	imagePublicId: string;
 }

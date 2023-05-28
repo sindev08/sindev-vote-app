@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import RestrictedPage from "../../components/page/RestrictedPage";
 import { showAlert } from "../../components/Alert";
 import { useRouter } from "next/router";
+import axios from "axios";
 registerLocale("id", id);
 
 export default function CreateVote() {
@@ -37,6 +38,7 @@ export default function CreateVote() {
 			key: candidates.length + 1,
 			title: "",
 			imageUrl: "",
+			imagePublicId: "",
 		};
 		setCandidates([...candidates, newCandidate]);
 	};
@@ -78,6 +80,7 @@ export default function CreateVote() {
 			});
 			return;
 		}
+
 		if (candidates.some((c) => c.imageUrl === "")) {
 			showAlert({
 				title: "Hmmh",
@@ -85,20 +88,12 @@ export default function CreateVote() {
 			});
 			return;
 		}
-		console.log(candidates);
-
-		// Post ke cloudinary
-		// if(!success){
-		// 	return showAlert({
-		// 		title: "Hmmh",
-		// 		message: "Gambar kandidat tidak boleh kosong",
-		// 	});
 
 		setLoading(true);
 		fetch("/api/vote", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/multipla",
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				title,
@@ -201,8 +196,9 @@ export default function CreateVote() {
 						<PlusIcon className="w-1/3" />
 					</div>
 				</div>
+
 				{/* Kandidate */}
-				<div className="text-right mt-19">
+				<div className="my-20 text-right">
 					<Button text="Buat Voting" isLoading={loading} />
 				</div>
 			</form>

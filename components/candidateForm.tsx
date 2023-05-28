@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Form from "./Form";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import UploadImage from "./UploadImage";
+import { showAlert } from "./Alert";
+import axios from "axios";
 
 interface Props {
 	candidate: Candidate;
@@ -10,23 +12,63 @@ interface Props {
 }
 
 export default function CandidateForm(props: Props) {
-	const [imgPreview, setImgPreview] = useState("/assets/images/avatar.png");
+	const [imgPreview, setImgPreview] = useState(null);
 	const [candidate, setCandidate] = useState<Candidate>({
 		key: 0,
 		name: "",
 		title: "",
 		imageUrl: "",
+		imagePublicId: "",
 	});
 
-	// const onChangeUpload = (e: any) => {
-	// 	const file = e.target.files[0];
-	// 	setCandidate({ ...candidate, imageUrl: e.target.files[0] });
-	// 	console.log(e.target.files[0]);
-	// 	console.log(candidate.imageUrl);
-	// 	// if (file.size > 1024000) alert("GAGAL");
-	// 	// else {
-	// 	// 	setCandidate({ ...candidate, imageUrl: e.target.files[0] });
-	// 	// }
+	const onChangeUpload = async (e: any) => {
+		const file = e.target.files[0];
+
+		// setCandidate({ ...candidate, imageUrl: e.target.files[0] });
+		if (file.type !== "image/png") {
+			return showAlert({
+				title: "Hmmmh..",
+				message: "Format file harus PNG",
+			});
+		}
+		if (file.size > 1024000) {
+			return showAlert({
+				title: "Hmmmh..",
+				message: "Ukuran file tidak boleh lebih dari 1 MB",
+			});
+		} else {
+			const data = new FormData();
+			data.append("file", file);
+			data.append("upload_preset", "public-vote");
+			data.append("cloud_name", "djrxbywav");
+			data.append("folder", "public-vote");
+			try {
+				const resp = await axios.post(
+					`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+					data
+				);
+				setImgPreview(resp.data.url);
+				setCandidate({
+					...candidate,
+					imageUrl: resp.data.url,
+					imagePublicId: resp.data.public_id,
+				});
+			} catch (err) {
+				console.log("errr : ", err);
+			}
+		}
+	};
+
+	// const deleteImage = async (e: any) => {
+	// 	e.preventDefault();
+	// 	cloudinary.v2.uploader
+	// 		.destroy(candidate.imagePublicId, function (error: any, result: any) {
+	// 			console.log(result, error);
+	// 		})
+	// 		.then((resp: any) => console.log(resp))
+	// 		.catch((_err: any) =>
+	// 			console.log("Something went wrong, please try again later.")
+	// 		);
 	// };
 
 	useEffect(() => {
@@ -47,9 +89,8 @@ export default function CandidateForm(props: Props) {
 			</div>
 			{/* Image */}
 			<UploadImage
-				onChange={(e: { target: { files: any[] } }) => {
-					setCandidate({ ...candidate, imageUrl: e.target.files[0] });
-				}}
+				onChange={onChangeUpload}
+				// handleDelete={deleteImage}
 				imgPreview={imgPreview}
 				setImgPreview={setImgPreview}
 			/>

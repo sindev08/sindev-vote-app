@@ -15,6 +15,7 @@ type Candidate {
   key Int
   title String
   imageUrl String
+  imagePublicId String
 }
 
 model votes{
