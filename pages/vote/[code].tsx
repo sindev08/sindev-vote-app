@@ -71,6 +71,7 @@ export default function DetailOrEditVote() {
 			key: candidates.length + 1,
 			title: "",
 			imageUrl: "",
+			imagePublicId: "",
 		};
 		setCandidates([...candidates, newCandidate]);
 	};
@@ -91,59 +92,59 @@ export default function DetailOrEditVote() {
 		e.preventDefault();
 		console.log(candidates);
 
-		//Validasi
-		// if (title == "") {
-		// 	showAlert({ title: "Hmmh", message: "Judul tidak boleh kosong" });
-		// 	return;
-		// }
-		// if (candidates.length < 2) {
-		// 	showAlert({ title: "Hmmh", message: "Minimal ada dua kandidat" });
-		// 	return;
-		// }
-		// if (startDateTime > endDateTime) {
-		// 	showAlert({
-		// 		title: "Hmmh",
-		// 		message: "Tanggal mulai tidak boleh lebih besar dari selesai",
-		// 	});
-		// 	return;
-		// }
-		// if (candidates.some((c) => c.name === "")) {
-		// 	showAlert({
-		// 		title: "Hmmh",
-		// 		message: "Nama kandidat tidak boleh kosong",
-		// 	});
-		// 	return;
-		// }
+		// Validasi
+		if (title == "") {
+			showAlert({ title: "Hmmh", message: "Judul tidak boleh kosong" });
+			return;
+		}
+		if (candidates.length < 2) {
+			showAlert({ title: "Hmmh", message: "Minimal ada dua kandidat" });
+			return;
+		}
+		if (startDateTime > endDateTime) {
+			showAlert({
+				title: "Hmmh",
+				message: "Tanggal mulai tidak boleh lebih besar dari selesai",
+			});
+			return;
+		}
+		if (candidates.some((c) => c.name === "")) {
+			showAlert({
+				title: "Hmmh",
+				message: "Nama kandidat tidak boleh kosong",
+			});
+			return;
+		}
 
-		// Image
-		// console.log(title, startDateTime, endDateTime, candidates);
+		Image;
+		console.log(title, startDateTime, endDateTime, candidates);
 
-		// setLoading(true);
-		// fetch(("/api/vote/" + code) as string, {
-		// 	method: "PUT",
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 	},
-		// 	body: JSON.stringify({
-		// 		title,
-		// 		startDateTime,
-		// 		endDateTime,
-		// 		candidates,
-		// 	}),
-		// })
-		// 	.then((data) => {
-		// 		showAlert({ title: "Yeayy", message: "Voting berhasil diubah" });
-		// 		router.push("/");
-		// 	})
-		// 	.catch(() => {
-		// 		showAlert({
-		// 			title: "Yeayy",
-		// 			message: "Voting gagal diubah",
-		// 		});
-		// 	})
-		// 	.finally(() => {
-		// 		setLoading(false);
-		// 	});
+		setLoading(true);
+		fetch(("/api/vote/" + code) as string, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				title,
+				startDateTime,
+				endDateTime,
+				candidates,
+			}),
+		})
+			.then((data) => {
+				showAlert({ title: "Yeayy", message: "Voting berhasil diubah" });
+				router.push("/");
+			})
+			.catch(() => {
+				showAlert({
+					title: "Yeayy",
+					message: "Voting gagal diubah",
+				});
+			})
+			.finally(() => {
+				setLoading(false);
+			});
 	};
 	return (
 		<div className="container mx-auto">
