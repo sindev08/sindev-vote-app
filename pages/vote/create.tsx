@@ -36,6 +36,7 @@ export default function CreateVote() {
 			name: "",
 			key: candidates.length + 1,
 			title: "",
+			imageUrl: "",
 		};
 		setCandidates([...candidates, newCandidate]);
 	};
@@ -77,12 +78,27 @@ export default function CreateVote() {
 			});
 			return;
 		}
+		if (candidates.some((c) => c.imageUrl === "")) {
+			showAlert({
+				title: "Hmmh",
+				message: "Gambar kandidat tidak boleh kosong",
+			});
+			return;
+		}
+		console.log(candidates);
+
+		// Post ke cloudinary
+		// if(!success){
+		// 	return showAlert({
+		// 		title: "Hmmh",
+		// 		message: "Gambar kandidat tidak boleh kosong",
+		// 	});
 
 		setLoading(true);
 		fetch("/api/vote", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/multipla",
 			},
 			body: JSON.stringify({
 				title,

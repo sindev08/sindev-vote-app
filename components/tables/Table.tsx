@@ -104,51 +104,67 @@ export default function Table({ columns, tableData }: Props) {
 					))}
 				</thead>
 				<tbody {...getTableBodyProps()}>
-					{page?.map((row: any, i: number) => {
-						prepareRow(row);
-						return (
-							<tr key={i} {...row.getRowProps()}>
-								<td className="p-5 text-left underline">
-									<a href={`/vote/${row.original.code}`}>
-										{row.original.title}
-									</a>
-								</td>
-								<td className="p-5 text-left">
-									{row.original.candidates.map(
-										(c: Candidate, index: number) => (
-											<span key={index}>
-												{c.name +
-													(index < row.original.candidates.length - 1
-														? " vs "
-														: "")}
-											</span>
-										)
-									)}
-								</td>
-								<td className="p-5 font-bold text-left">{row.original.code}</td>
-								<td className="p-5 text-left">
-									{moment(row.original.startDateTime).format(
-										"DD MMM YYYY hh:mm a"
-									)}
-								</td>
-								<td className="p-5 text-left">
-									{moment(row.original.endDateTime).format(
-										"DD MMM YYYY hh:mm a"
-									)}
-								</td>
-								<td className="p-5 text-left">
-									<div className="">
-										<a href={`/participant/${row.original.code}`}>
-											<LinkIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+					{page.length > 0 ? (
+						page?.map((row: any, i: number) => {
+							prepareRow(row);
+							return (
+								<tr key={i} {...row.getRowProps()}>
+									<td className="p-5 text-left underline">
+										<a href={`/vote/${row.original.code}`}>
+											{row.original.title}
 										</a>
-										<button onClick={() => handleDelete(row.original.code)}>
-											<TrashIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
-										</button>
-									</div>
-								</td>
-							</tr>
-						);
-					})}
+									</td>
+									<td className="p-5 text-left">
+										{row.original.candidates.map(
+											(c: Candidate, index: number) => (
+												<span key={index}>
+													{c.name +
+														(index < row.original.candidates.length - 1
+															? " vs "
+															: "")}
+												</span>
+											)
+										)}
+									</td>
+									<td className="p-5 font-bold text-left">
+										{row.original.code}
+									</td>
+									<td className="p-5 text-left">
+										{moment(row.original.startDateTime).format(
+											"DD MMM YYYY hh:mm a"
+										)}
+									</td>
+									<td className="p-5 text-left">
+										{moment(row.original.endDateTime).format(
+											"DD MMM YYYY hh:mm a"
+										)}
+									</td>
+									<td className="p-5 text-left">
+										<div className="">
+											<a href={`/participant/${row.original.code}`}>
+												<LinkIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+											</a>
+											<button onClick={() => handleDelete(row.original.code)}>
+												<TrashIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+											</button>
+										</div>
+									</td>
+								</tr>
+							);
+						})
+					) : (
+						<tr>
+							<td></td>
+							<td></td>
+							<td className="p-5">
+								<div className="flex items-center justify-center w-full">
+									<span>Belum ada voting</span>
+								</div>
+							</td>
+							<td></td>
+							<td></td>
+						</tr>
+					)}
 				</tbody>
 			</table>
 			<div className="flex items-center justify-between w-full pb-16 mt-8">

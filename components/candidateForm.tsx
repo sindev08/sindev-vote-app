@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Form from "./Form";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
+import UploadImage from "./UploadImage";
 
 interface Props {
 	candidate: Candidate;
@@ -10,11 +10,24 @@ interface Props {
 }
 
 export default function CandidateForm(props: Props) {
+	const [imgPreview, setImgPreview] = useState("/assets/images/avatar.png");
 	const [candidate, setCandidate] = useState<Candidate>({
 		key: 0,
 		name: "",
 		title: "",
+		imageUrl: "",
 	});
+
+	// const onChangeUpload = (e: any) => {
+	// 	const file = e.target.files[0];
+	// 	setCandidate({ ...candidate, imageUrl: e.target.files[0] });
+	// 	console.log(e.target.files[0]);
+	// 	console.log(candidate.imageUrl);
+	// 	// if (file.size > 1024000) alert("GAGAL");
+	// 	// else {
+	// 	// 	setCandidate({ ...candidate, imageUrl: e.target.files[0] });
+	// 	// }
+	// };
 
 	useEffect(() => {
 		setCandidate(props.candidate);
@@ -32,12 +45,14 @@ export default function CandidateForm(props: Props) {
 					onClick={() => props.removeCandidate(candidate.key)}
 				/>
 			</div>
-			<div className="relative flex items-center self-center justify-center w-1/2 overflow-hidden rounded bg-zinc-100 aspect-square">
-				<Image src={"/assets/images/profile.png"} alt="profile" fill />
-			</div>
-			{/* <h1 className="flex items-center self-center justify-center w-1/2 text-4xl text-center rounded-full bg-zinc-100 aspect-square">
-				{props.candidate.key}
-			</h1> */}
+			{/* Image */}
+			<UploadImage
+				onChange={(e: { target: { files: any[] } }) => {
+					setCandidate({ ...candidate, imageUrl: e.target.files[0] });
+				}}
+				imgPreview={imgPreview}
+				setImgPreview={setImgPreview}
+			/>
 			<label className="mt-3 mb-1 text-sm">Nama Kandidat</label>
 			<Form
 				placeholder="Masukkan Nama Kandidat"

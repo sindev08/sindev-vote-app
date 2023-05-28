@@ -19,30 +19,6 @@ const Home: NextPage = () => {
 
 	const [votes, setVotes] = useState<votes[]>();
 
-	const handleDelete = (code: string) => {
-		showAlert({
-			title: "Anda Yakin?",
-			message: "Ingin menghapus data ini?",
-			onPositiveClick() {
-				fetch("/api/vote/" + code, {
-					method: "DELETE",
-				})
-					.then(() => {
-						showAlert({
-							title: "Berhasil",
-							message: "Data Berhasil Dihapus",
-						});
-						setVotes(votes?.filter((vote) => vote.code !== code));
-					})
-					.catch(() => {
-						showAlert({
-							title: "Gagal",
-							message: "Data Gagal Dihapus",
-						});
-					});
-			},
-		});
-	};
 	const columns = useMemo(
 		() => [
 			{
