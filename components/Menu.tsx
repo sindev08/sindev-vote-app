@@ -9,7 +9,7 @@ export const Menu = () => {
 
 	const { data: session } = useSession();
 	return (
-		<div className="flex justify-between py-5 ">
+		<div className="flex justify-between px-4 py-5 xl:px-0">
 			<Image
 				src="/assets/jujurly.svg"
 				width={100}

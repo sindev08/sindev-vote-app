@@ -119,7 +119,7 @@ export default function CreateVote() {
 	};
 
 	return (
-		<div className="container mx-auto">
+		<div className="container px-4 mx-auto xl:px-0">
 			<Head>
 				<title>Voting Baru</title>
 			</Head>
@@ -133,14 +133,16 @@ export default function CreateVote() {
 					height={198}
 				/>
 			</div>
-			<h1 className="text-4xl ffont-bol">Buat Voting Baru</h1>
-			<h2 className="mt-3 text-zinc">
+			<h1 className="text-2xl font-bold md:text-4xl">Buat Voting Baru</h1>
+			<h2 className="mt-3 text-base text-zinc">
 				Silahkan masukkan data yang dibutuhkan sebelum membuat vote online
 			</h2>
 			<form className="flex flex-col" onSubmit={createVote}>
 				{/* Detail Vote */}
 				<div className="space-y-5">
-					<h3 className="mt-10 text-xl font-medium ">Detail Voting</h3>
+					<h3 className="mt-10 text-lg font-medium md:text-xl ">
+						Detail Voting
+					</h3>
 					<div className="flex flex-col">
 						<label className="mt-5 text-sm">Judul</label>
 						<Form
@@ -148,13 +150,13 @@ export default function CreateVote() {
 								setTitle(e);
 							}}
 							value={title}
-							className="w-1/2 mt-1"
+							className="w-full mt-1 md:w-1/2"
 							placeholder={"Contoh : Voting Calon Gubernur"}
 						/>
 					</div>
-					<div className="flex flex-col w-2/3 ">
+					<div className="flex flex-col w-full md:w-2/3 ">
 						<label>Kapan Dimulai?</label>
-						<div className="inline-flex">
+						<div className="flex flex-col space-y-1 md:space-y-0 md:flex-row">
 							<DatePicker
 								onChange={(date) => date && setStartDateTime(date)}
 								locale="id"
@@ -180,7 +182,7 @@ export default function CreateVote() {
 				{/* Detail Vote */}
 				{/* Kandidate */}
 				<h3 className="mt-10 font-medium yexy-xl"></h3>
-				<div className="grid grid-cols-4 gap-4 mt-5">
+				<div className="grid gap-4 mt-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 					{candidates.map((candidate: Candidate, i: number) => (
 						<CandidateForm
 							key={i}
@@ -190,10 +192,10 @@ export default function CreateVote() {
 						/>
 					))}
 					<div
-						className="flex flex-col items-center justify-center w-1/3 cursor-pointer bg-zinc-100 aspect-square text-zinc-300 hover:bg-black hover:text-white"
+						className="flex flex-col items-center justify-center w-16 cursor-pointer md:-1/3 bg-zinc-100 aspect-square text-zinc-300 hover:bg-black hover:text-white"
 						onClick={() => addCandidateForm()}
 					>
-						<PlusIcon className="w-1/3" />
+						<PlusIcon className="w-1/2  md:w-1/3" />
 					</div>
 				</div>
 

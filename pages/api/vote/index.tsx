@@ -27,12 +27,8 @@ export default async function handle(
 				deleteAt: null,
 			},
 		});
-		console.log(result);
-		console.log(req.body);
-		// console.log("with Image", candidatesWithImageUrl);
-		// console.log("without Image", req.body.candidates);
 
-		// return res.json(result);
+		return res.json(result);
 
 		// try {
 

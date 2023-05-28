@@ -74,155 +74,173 @@ export default function Table({ columns, tableData }: Props) {
 		});
 	};
 	return (
-		<div>
-			<GlobalFilter
-				preGlobalFilteredRows={preGlobalFilteredRows}
-				globalFilter={state.globalFilter}
-				setGlobalFilter={setGlobalFilter}
-			/>
-			<table
-				{...getTableProps()}
-				className="w-full border table-auto border-zinc-100 "
-			>
-				<thead>
-					{headerGroups?.map((headerGroup: any, i: number) => (
-						<tr
-							className="border-b border-zinc-100"
-							key={i}
-							{...headerGroup.getHeaderGroupProps()}
-						>
-							{headerGroup?.headers?.map((column: any, index: number) => (
-								<th
-									className="p-5 text-left"
-									key={index}
-									{...column.getHeaderProps()}
+		<div className="w-full pb-10">
+			{page.length > 0 ? (
+				<>
+					<GlobalFilter
+						preGlobalFilteredRows={preGlobalFilteredRows}
+						globalFilter={state.globalFilter}
+						setGlobalFilter={setGlobalFilter}
+					/>
+					<table
+						{...getTableProps()}
+						className="w-full border table-auto border-zinc-100"
+					>
+						<thead>
+							{headerGroups?.map((headerGroup: any, i: number) => (
+								<tr
+									className="border-b border-zinc-100"
+									key={i}
+									{...headerGroup.getHeaderGroupProps()}
 								>
-									{column.render("Header")}
-								</th>
-							))}
-						</tr>
-					))}
-				</thead>
-				<tbody {...getTableBodyProps()}>
-					{page.length > 0 ? (
-						page?.map((row: any, i: number) => {
-							prepareRow(row);
-							return (
-								<tr key={i} {...row.getRowProps()}>
-									<td className="p-5 text-left underline">
-										<a href={`/vote/${row.original.code}`}>
-											{row.original.title}
-										</a>
-									</td>
-									<td className="p-5 text-left">
-										{row.original.candidates.map(
-											(c: Candidate, index: number) => (
-												<span key={index}>
-													{c.name +
-														(index < row.original.candidates.length - 1
-															? " vs "
-															: "")}
-												</span>
-											)
-										)}
-									</td>
-									<td className="p-5 font-bold text-left">
-										{row.original.code}
-									</td>
-									<td className="p-5 text-left">
-										{moment(row.original.startDateTime).format(
-											"DD MMM YYYY hh:mm a"
-										)}
-									</td>
-									<td className="p-5 text-left">
-										{moment(row.original.endDateTime).format(
-											"DD MMM YYYY hh:mm a"
-										)}
-									</td>
-									<td className="p-5 text-left">
-										<div className="">
-											<a href={`/participant/${row.original.code}`}>
-												<LinkIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
-											</a>
-											<button onClick={() => handleDelete(row.original.code)}>
-												<TrashIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
-											</button>
-										</div>
-									</td>
+									{headerGroup?.headers?.map((column: any, index: number) => (
+										<th
+											className="p-5 text-left"
+											key={index}
+											{...column.getHeaderProps()}
+										>
+											{column.render("Header")}
+										</th>
+									))}
 								</tr>
-							);
-						})
-					) : (
-						<tr>
-							<td></td>
-							<td></td>
-							<td className="p-5">
-								<div className="flex items-center justify-center w-full">
-									<span>Belum ada voting</span>
-								</div>
-							</td>
-							<td></td>
-							<td></td>
-						</tr>
-					)}
-				</tbody>
-			</table>
-			<div className="flex items-center justify-between w-full pb-16 mt-8">
-				<div className="flex items-center space-x-4">
-					<button
-						className="px-3 py-2 border-2 border-zinc-900"
-						onClick={() => gotoPage(0)}
-						disabled={!canPreviousPage}
-					>
-						<ChevronDoubleLeftIcon className="w-5 h-5" />
-					</button>
-					<button
-						className="px-3 py-2 border-2 bg-zinc-900 border-zinc-900"
-						onClick={() => previousPage()}
-						disabled={!canPreviousPage}
-					>
-						<ChevronLeftIcon className="w-5 h-5 text-white" />
-					</button>
-				</div>
-
-				<div className="flex items-center space-x-4">
-					<span>
-						Halaman{" "}
-						<strong>
-							{state.pageIndex + 1} of {pageOptions.length}
-						</strong>{" "}
+							))}
+						</thead>
+						<tbody {...getTableBodyProps()}>
+							{page?.map((row: any, i: number) => {
+								prepareRow(row);
+								return (
+									<tr key={i} {...row.getRowProps()}>
+										<td className="p-5 text-left underline">
+											<a href={`/vote/${row.original.code}`}>
+												{row.original.title}
+											</a>
+										</td>
+										<td className="p-5 text-left">
+											{row.original.candidates.map(
+												(c: Candidate, index: number) => (
+													<span key={index}>
+														{c.name +
+															(index < row.original.candidates.length - 1
+																? " vs "
+																: "")}
+													</span>
+												)
+											)}
+										</td>
+										<td className="p-5 font-bold text-left">
+											{row.original.code}
+										</td>
+										<td className="p-5 text-left">
+											{moment(row.original.startDateTime).format(
+												"DD MMM YYYY hh:mm a"
+											)}
+										</td>
+										<td className="p-5 text-left">
+											{moment(row.original.endDateTime).format(
+												"DD MMM YYYY hh:mm a"
+											)}
+										</td>
+										<td className="p-5 text-left">
+											<div className="">
+												<a href={`/participant/${row.original.code}`}>
+													<LinkIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+												</a>
+												<button onClick={() => handleDelete(row.original.code)}>
+													<TrashIcon className="w-8 h-8 p-2 hover:bg-zinc-100 " />
+												</button>
+											</div>
+										</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+					<div className="flex flex-col items-center w-full pb-16 mt-8 space-y-5">
+						<div className="flex items-center justify-between">
+							<div className="flex items-center space-x-4">
+								<button
+									className="px-3 py-2 border-2 border-zinc-900"
+									onClick={() => gotoPage(0)}
+									disabled={!canPreviousPage}
+								>
+									<ChevronDoubleLeftIcon className="w-5 h-5" />
+								</button>
+								<button
+									className="px-3 py-2 border-2 bg-zinc-900 border-zinc-900"
+									onClick={() => previousPage()}
+									disabled={!canPreviousPage}
+								>
+									<ChevronLeftIcon className="w-5 h-5 text-white" />
+								</button>
+							</div>
+							<div className="items-center hidden space-x-4 md:flex">
+								<span>
+									Halaman{" "}
+									<strong>
+										{state.pageIndex + 1} of {pageOptions.length}
+									</strong>{" "}
+								</span>
+								<select
+									value={state.pageSize}
+									className=" focus:outline-none"
+									onChange={(e) => {
+										setPageSize(Number(e.target.value));
+									}}
+								>
+									{[5, 10, 20].map((pageSize) => (
+										<option key={pageSize} value={pageSize}>
+											Memperlihatkan {pageSize}
+										</option>
+									))}
+								</select>
+							</div>
+							<div className="flex items-center space-x-4">
+								<button
+									className="px-3 py-2 border-2 bg-zinc-900 border-zinc-900"
+									onClick={() => nextPage()}
+									disabled={!canNextPage}
+								>
+									<ChevronRightIcon className="w-5 h-5 text-white" />
+								</button>
+								<button
+									className="px-3 py-2 border-2 border-zinc-900"
+									onClick={() => gotoPage(pageCount - 1)}
+									disabled={!canNextPage}
+								>
+									<ChevronDoubleRightIcon className="w-5 h-5" />
+								</button>
+							</div>
+						</div>
+						<div className="flex items-center space-x-4 md:hidden">
+							<span>
+								Halaman{" "}
+								<strong>
+									{state.pageIndex + 1} of {pageOptions.length}
+								</strong>{" "}
+							</span>
+							<select
+								value={state.pageSize}
+								className=" focus:outline-none"
+								onChange={(e) => {
+									setPageSize(Number(e.target.value));
+								}}
+							>
+								{[5, 10, 20].map((pageSize) => (
+									<option key={pageSize} value={pageSize}>
+										Memperlihatkan {pageSize}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				</>
+			) : (
+				<div className="flex items-center justify-center w-full">
+					<span className="px-3 py-1 rounded bg-zinc-100">
+						Belum ada voting
 					</span>
-					<select
-						value={state.pageSize}
-						className=" focus:outline-none"
-						onChange={(e) => {
-							setPageSize(Number(e.target.value));
-						}}
-					>
-						{[5, 10, 20].map((pageSize) => (
-							<option key={pageSize} value={pageSize}>
-								Memperlihatkan {pageSize}
-							</option>
-						))}
-					</select>
 				</div>
-				<div className="flex items-center space-x-4">
-					<button
-						className="px-3 py-2 border-2 bg-zinc-900 border-zinc-900"
-						onClick={() => nextPage()}
-						disabled={!canNextPage}
-					>
-						<ChevronRightIcon className="w-5 h-5 text-white" />
-					</button>
-					<button
-						className="px-3 py-2 border-2 border-zinc-900"
-						onClick={() => gotoPage(pageCount - 1)}
-						disabled={!canNextPage}
-					>
-						<ChevronDoubleRightIcon className="w-5 h-5" />
-					</button>
-				</div>
-			</div>
+			)}
 		</div>
 	);
 }

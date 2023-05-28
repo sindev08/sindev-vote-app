@@ -46,7 +46,7 @@ export default function Login({ providers }: any) {
 			<Link href={"/"} className="mb-10 text-6xl font-bold">
 				Jujurly
 			</Link>
-			<div className="w-1/3">
+			<div className="w-2/3  md:w-1/3">
 				{Object.values(providers).map((provider: any) => (
 					<button
 						key={provider.id}
