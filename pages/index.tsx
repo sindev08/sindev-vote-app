@@ -15,7 +15,6 @@ const Home: NextPage = () => {
 	const router = useRouter();
 	const { data: session } = useSession();
 	const { data: dataVotesApi, error, isLoading } = useVotes();
-	// console.log("dataVotesApi", dataVotesApi);
 
 	const [votes, setVotes] = useState<votes[]>();
 

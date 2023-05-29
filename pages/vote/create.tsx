@@ -95,7 +95,6 @@ export default function CreateVote() {
 			candidates,
 			publisher: session?.user?.email,
 		};
-		// console.log(data);
 
 		setLoading(true);
 		fetch("/api/vote", {

@@ -20,19 +20,19 @@ function Alert(props: Props) {
 			role="dialog"
 			arial-modal="true"
 		>
-			<div className="fixed inset-0 bg-zinc-900 bg-opacity-40 transition-opacity"></div>
+			<div className="fixed inset-0 transition-opacity bg-zinc-900 bg-opacity-40"></div>
 			<div className="fixed inset-0 z-10 overflow-y-auto">
-				<div className="flex min-h-full items-center justify-center text-center">
-					<div className="relative transform overflow-hidden bg-white text-left shadow-xl transition-all p-4 rounded-md">
+				<div className="flex items-center justify-center min-h-full text-center">
+					<div className="relative p-4 overflow-hidden text-left transition-all transform bg-white rounded-md shadow-xl">
 						{/* Content */}
 						<div className="w-full p-5 text-center">
 							<p className="text-2xl font-bold">{props.title || "Title"}</p>
 							<p className="text-lg"> {props.message || "Message Here"}</p>
 						</div>
 						{/* Content */}
-						<div className="space-x-3 mt-5">
+						<div className="flex justify-center mt-5 space-x-5">
 							<button
-								className="text-sm bg-zinc px-2 py-1 hover:bg-zinc-200 bg-zinc-100"
+								className="px-2 py-1 text-sm bg-zinc hover:bg-zinc-200 bg-zinc-100"
 								onClick={() => {
 									props.onNegativeClick;
 									setIsOpen(false);
@@ -42,7 +42,9 @@ function Alert(props: Props) {
 							</button>
 							<Button
 								text={props.positiveBtnText || "Iya"}
-								className={`${!props.onPositiveClick && "hidden"}`}
+								className={`${
+									!props.onPositiveClick && "hidden"
+								} min-w-[120px]`}
 								onClick={() => {
 									props.onPositiveClick && props.onPositiveClick();
 									setIsOpen(false);

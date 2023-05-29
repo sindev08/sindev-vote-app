@@ -90,7 +90,6 @@ export default function DetailOrEditVote() {
 
 	const updateVote = (e: any) => {
 		e.preventDefault();
-		console.log(candidates);
 
 		// Validasi
 		if (title == "") {
@@ -115,9 +114,6 @@ export default function DetailOrEditVote() {
 			});
 			return;
 		}
-
-		Image;
-		console.log(title, startDateTime, endDateTime, candidates);
 
 		setLoading(true);
 		fetch(("/api/vote/" + code) as string, {
