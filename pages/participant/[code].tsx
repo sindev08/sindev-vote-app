@@ -125,6 +125,7 @@ export default function DetailParticipant() {
 										currentState === STATE_STARTED &&
 										setSelectedCandidate(candidate);
 								}}
+								imageUrl={candidate.imageUrl}
 								isSelected={selectedCandidate?.name === candidate.name}
 								name={candidate.name}
 								index={i}

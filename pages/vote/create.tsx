@@ -13,7 +13,6 @@ import { useSession } from "next-auth/react";
 import RestrictedPage from "../../components/page/RestrictedPage";
 import { showAlert } from "../../components/Alert";
 import { useRouter } from "next/router";
-import axios from "axios";
 registerLocale("id", id);
 
 export default function CreateVote() {
@@ -89,12 +88,21 @@ export default function CreateVote() {
 			return;
 		}
 
+		const data = {
+			title,
+			startDateTime,
+			endDateTime,
+			candidates,
+			publisher: session?.user?.email,
+		};
+		// console.log(data);
+
 		setLoading(true);
 		fetch("/api/vote", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
+			// headers: {
+			// 	"Content-Type": "application/json",
+			// },
 			body: JSON.stringify({
 				title,
 				startDateTime,
@@ -195,7 +203,7 @@ export default function CreateVote() {
 						className="flex flex-col items-center justify-center w-16 cursor-pointer md:-1/3 bg-zinc-100 aspect-square text-zinc-300 hover:bg-black hover:text-white"
 						onClick={() => addCandidateForm()}
 					>
-						<PlusIcon className="w-1/2  md:w-1/3" />
+						<PlusIcon className="w-1/2 md:w-1/3" />
 					</div>
 				</div>
 

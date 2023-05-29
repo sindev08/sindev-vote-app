@@ -8,6 +8,7 @@ export default async function handle(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
+	console.log(req);
 	const session = await getSession({ req });
 	if (!session) {
 		return res
@@ -16,17 +17,20 @@ export default async function handle(
 	}
 	// Create New
 	if (req.method === "POST") {
+		const data = JSON.parse(req.body);
+
 		const result = await prisma.votes.create({
 			data: {
-				title: req.body.title,
-				candidates: req.body.candidates,
-				startDateTime: req.body.startDateTime,
-				endDateTime: req.body.endDateTime,
-				publisher: req.body.publisher,
+				title: data.title,
+				candidates: data.candidates,
+				startDateTime: data.startDateTime,
+				endDateTime: data.endDateTime,
+				publisher: data.publisher,
 				code: code(6),
 				deleteAt: null,
 			},
 		});
+		// console.log(res.json(result));
 
 		return res.json(result);
 

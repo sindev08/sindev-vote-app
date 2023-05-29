@@ -9,6 +9,7 @@ interface Props {
 	percentage?: number;
 	onClick?: () => void;
 	isSelected: boolean;
+	imageUrl: any;
 }
 
 export default function CandidateItem(props: Props) {
@@ -18,7 +19,7 @@ export default function CandidateItem(props: Props) {
 				{props.index + 1}
 			</div>
 			<div className="relative flex items-center self-center justify-center w-24 overflow-hidden rounded bg-zinc-100 aspect-square">
-				<Image src={"/assets/images/profile.png"} alt="profile" fill />
+				<Image src={props.imageUrl} alt="profile" fill />
 			</div>
 			<div className="w-full ">
 				<h3 className="text-lg font-bold">{props.name}</h3>
@@ -46,8 +47,8 @@ export default function CandidateItem(props: Props) {
 				onClick={props.onClick}
 				className={`flex items-center justify-center w-20 h-20 rounded-md cursor-pointer ${
 					props.isSelected
-						? "bg-green-500 hover:bg-green-600"
-						: "bg-zinc-100 hover:bg-zinc-200"
+						? "bg-red-500 hover:bg-green-600"
+						: "bg-orange-500 hover:bg-zinc-200"
 				}`}
 			>
 				<CheckIcon className="w-7 h-7" />
