@@ -31,15 +31,16 @@ export default function DetailOrEditVote() {
 
 	useEffect(() => {
 		if (session?.user?.email !== dataVoteApi?.data?.publisher) {
-			showAlert({
-				title: "Tidak bisa diakses",
-				message: "Anda bukan sebagai publisher",
-				negativeBtnText: "Tutup",
-				positiveBtnText: "Kembali ke berand",
-				onPositiveClick() {
-					router.push("/");
-				},
-			});
+			// showAlert({
+			// 	title: "Tidak bisa diakses",
+			// 	message: "Anda bukan sebagai publisher",
+			// 	negativeBtnText: "Tutup",
+			// 	positiveBtnText: "Kembali ke berand",
+			// 	// onPositiveClick() {
+			// 	// 	router.push("/");
+			// 	// },
+			// });
+			router.push("/");
 		} else if (dataVoteApi && dataVoteApi?.data) {
 			const d = dataVoteApi?.data;
 			setTitle(d.title);
